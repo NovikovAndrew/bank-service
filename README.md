@@ -25,21 +25,36 @@ docker pull kjconroy/sqlc
 for init yaml file user command 
 sqlc init
 
-install mockgen
+### Install mockgen
 
 make sure mock is set
 
+```
 ls -l ~/go/bin
+```
 
 for check mockgen user command which mockgen
 
-in my case vi ~/.zshrch
+in my case
+
+```
+vi ~/.zshrch
+```
 
 after insert the path  go/bin 
 
+```
 export PATH=$PATH:~/go/bin
+```
 
-and 
+and
 
+```
 source ~/.zshrc
+```
 
+### For generate mockdb use command 
+
+```
+mockgen -package mockdb -destination db/mock/store.go  bank-service/db/sqlc Store 
+```

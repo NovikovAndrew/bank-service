@@ -7,6 +7,7 @@ import (
 )
 
 type Store interface {
+	Querier
 	TransferTx(ctx context.Context, params TransferTxParams) (TransferTxResult, error)
 }
 
@@ -90,7 +91,35 @@ func (s *SQLStore) TransferTx(ctx context.Context, params TransferTxParams) (Tra
 			return err
 		}
 
-		// TODO: update account balance
+		account1, err := q.GetAccountForUpdate(ctx, params.FromAccountID)
+
+		if err != nil {
+			return err
+		}
+
+		result.FromAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
+			ID:      params.FromAccountID,
+			Balance: account1.Balance - params.Amount,
+		})
+
+		if err != nil {
+			return err
+		}
+
+		account2, err := q.GetAccountForUpdate(ctx, params.ToAccountID)
+
+		if err != nil {
+			return err
+		}
+
+		result.ToAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
+			ID:      params.FromAccountID,
+			Balance: account2.Balance + params.Amount,
+		})
+
+		if err != nil {
+			return err
+		}
 
 		return nil
 	})
