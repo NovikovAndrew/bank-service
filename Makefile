@@ -25,7 +25,10 @@ test:
 server:
 	go run main.go
 
+usermigration:
+	migrate create -ext sql -dir db/migration -seq add_users
+
 mock:
 	mockgen -package mockdb -destination db/mock/store.go  bank-service/db/sqlc Store
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlcinit sqlc test mock
+.PHONY: postgres createdb dropdb migrateup migratedown sqlcinit sqlc test mock usermigration
