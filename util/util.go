@@ -10,6 +10,8 @@ const (
 	alphabet = "abcdefghijklmnopqrstuvwxyz"
 )
 
+var Currencies = [4]string{"USD", "EUR", "KZT", "RUB"}
+
 //goland:noinspection ALL
 func init() {
 	rand.Seed(time.Now().UnixNano())
@@ -40,7 +42,6 @@ func RandomMoney() int64 {
 }
 
 func RandomCurrency() string {
-	currencies := [4]string{"USD", "EUR", "KZT", "RUB"}
-	n := len(currencies)
-	return currencies[rand.Intn(n)]
+	n := len(Currencies)
+	return Currencies[rand.Intn(n)]
 }

@@ -13,7 +13,7 @@ import (
 
 type CreateAccountRequest struct {
 	Owner    string `json:"owner" binding:"required"`
-	Currency string `json:"currency" binding:"required"`
+	Currency string `json:"currency" binding:"required,oneof=USD EUR KZT RUB"`
 }
 
 func (server *Server) createAccount(ctx *gin.Context) {
@@ -138,12 +138,12 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 		ID:      req.ID,
 		Balance: req.Balance,
 	}
-	err := server.store.UpdateAccount(context.Background(), args)
+	account, err := server.store.UpdateAccount(context.Background(), args)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, req)
+	ctx.JSON(http.StatusOK, account)
 }
