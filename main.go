@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bank-service/token"
 	"bank-service/util"
 	"database/sql"
 	"log"
@@ -25,7 +26,13 @@ func main() {
 	}
 
 	store := db.NewStore(conn)
-	server := api.NewServer(store)
+	pasetoMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	server := api.NewServer(store, pasetoMaker, config)
 
 	if err := server.Start(config.ServerAddress); err != nil {
 		log.Fatal(err)
