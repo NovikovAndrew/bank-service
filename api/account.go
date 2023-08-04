@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bank-service/token"
 	"context"
 	"database/sql"
 	"errors"
@@ -13,7 +14,6 @@ import (
 )
 
 type CreateAccountRequest struct {
-	Owner    string `json:"owner" binding:"required"`
 	Currency string `json:"currency" binding:"required,oneof=USD EUR KZT RUB"`
 }
 
@@ -24,8 +24,16 @@ func (server *Server) createAccount(ctx *gin.Context) {
 		return
 	}
 
+	authPayload, ok := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
+	if !ok {
+		err := errors.New("mismatch token payload")
+		ctx.JSON(http.StatusUnauthorized, ErrorResponse(err))
+		return
+	}
+
 	args := db.CreateAccountParams{
-		Owner:    req.Owner,
+		Owner:    authPayload.Username,
 		Balance:  0,
 		Currency: req.Currency,
 	}
@@ -70,6 +78,20 @@ func (server *Server) getAccount(ctx *gin.Context) {
 		return
 	}
 
+	authPayload, ok := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
+	if !ok {
+		err := errors.New("mismatch token payload")
+		ctx.JSON(http.StatusUnauthorized, ErrorResponse(err))
+		return
+	}
+
+	if authPayload.Username != account.Owner {
+		err := errors.New("accounts doesn't belong to the user")
+		ctx.JSON(http.StatusUnauthorized, ErrorResponse(err))
+		return
+	}
+
 	ctx.JSON(http.StatusOK, account)
 }
 
@@ -85,7 +107,16 @@ func (server *Server) listAccount(ctx *gin.Context) {
 		return
 	}
 
+	authPayload, ok := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
+	if !ok {
+		err := errors.New("mismatch token payload")
+		ctx.JSON(http.StatusUnauthorized, ErrorResponse(err))
+		return
+	}
+
 	args := db.GetListAccountsParams{
+		Owner:  authPayload.Username,
 		Limit:  req.Size,
 		Offset: (req.Page - 1) * req.Size,
 	}

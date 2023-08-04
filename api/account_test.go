@@ -19,7 +19,7 @@ import (
 )
 
 func TestGetAccountAPI(t *testing.T) {
-	account := generateAccount()
+	account := generateAccount(util.GenerateRandomString(32))
 
 	testCases := []struct {
 		name          string
@@ -109,10 +109,10 @@ func TestGetAccountAPI(t *testing.T) {
 	}
 }
 
-func generateAccount() db.Account {
+func generateAccount(owner string) db.Account {
 	return db.Account{
 		ID:       util.RandomInt(1, 1000),
-		Owner:    util.RandomOwner(),
+		Owner:    owner,
 		Balance:  util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
