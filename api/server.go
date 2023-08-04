@@ -38,19 +38,21 @@ func NewServer(store db.Store, tokenMaker token.Maker, config util.Config) *Serv
 func (server *Server) setupRouter() {
 	router := gin.Default()
 
-	// accounts
-	router.POST("/accounts", server.createAccount)
-	router.GET("/accounts/:id", server.getAccount)
-	router.GET("/accounts", server.listAccount)
-	router.PUT("/accounts", server.updateAccount)
-	router.DELETE("/accounts/:id", server.deleteAccount)
-
-	// transfers
-	router.POST("/transfers", server.createTransfer)
-
 	// users
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
+
+	authGroup := router.Group("/").Use(authMiddleware(server.tokenMaker))
+
+	// accounts
+	authGroup.POST("/accounts", server.createAccount)
+	authGroup.GET("/accounts/:id", server.getAccount)
+	authGroup.GET("/accounts", server.listAccount)
+	authGroup.PUT("/accounts", server.updateAccount)
+	authGroup.DELETE("/accounts/:id", server.deleteAccount)
+
+	// transfers
+	authGroup.POST("/transfers", server.createTransfer)
 
 	server.router = router
 }
@@ -59,6 +61,6 @@ func (server *Server) Start(address string) error {
 	return server.router.Run(address)
 }
 
-func errorResponse(err error) gin.H {
+func ErrorResponse(err error) gin.H {
 	return gin.H{"error": err.Error()}
 }

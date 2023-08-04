@@ -20,7 +20,7 @@ type CreateAccountRequest struct {
 func (server *Server) createAccount(ctx *gin.Context) {
 	var req CreateAccountRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 		return
 	}
 
@@ -36,11 +36,11 @@ func (server *Server) createAccount(ctx *gin.Context) {
 		if pqErr, ok := err.(*pq.Error); ok {
 			switch pqErr.Code.Name() {
 			case "foreign_key_violation", "unique_violation":
-				ctx.JSON(http.StatusForbidden, errorResponse(err))
+				ctx.JSON(http.StatusForbidden, ErrorResponse(err))
 				return
 			}
 		}
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 		return
 	}
 
@@ -54,7 +54,7 @@ type GetAccountRequest struct {
 func (server *Server) getAccount(ctx *gin.Context) {
 	var req GetAccountRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 		return
 	}
 
@@ -62,11 +62,11 @@ func (server *Server) getAccount(ctx *gin.Context) {
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			ctx.JSON(http.StatusNotFound, ErrorResponse(err))
 			return
 		}
 
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 		return
 	}
 
@@ -81,7 +81,7 @@ type ListAccountRequest struct {
 func (server *Server) listAccount(ctx *gin.Context) {
 	var req ListAccountRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 		return
 	}
 
@@ -92,7 +92,7 @@ func (server *Server) listAccount(ctx *gin.Context) {
 	accounts, err := server.store.GetListAccounts(context.Background(), args)
 
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 		return
 	}
 
@@ -111,7 +111,7 @@ type DeleteAccountRequest struct {
 func (server *Server) deleteAccount(ctx *gin.Context) {
 	var req DeleteAccountRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 		return
 	}
 
@@ -119,11 +119,11 @@ func (server *Server) deleteAccount(ctx *gin.Context) {
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			ctx.JSON(http.StatusNotFound, ErrorResponse(err))
 			return
 		}
 
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 		return
 	}
 
@@ -138,7 +138,7 @@ type UpdateAccountRequest struct {
 func (server *Server) updateAccount(ctx *gin.Context) {
 	var req UpdateAccountRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 		return
 	}
 
@@ -149,7 +149,7 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 	account, err := server.store.UpdateAccount(context.Background(), args)
 
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 		return
 	}
 
