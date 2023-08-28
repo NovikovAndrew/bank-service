@@ -58,3 +58,35 @@ source ~/.zshrc
 ```
 mockgen -package mockdb -destination db/mock/store.go  bank-service/db/sqlc Store 
 ```
+
+### gPRC client for testing 
+
+You can use evans for testing gRPC client
+
+Installation:
+
+macOS
+```
+brew tap ktr0731/evans
+brew install evans
+```
+
+Docker image 
+
+```
+docker run --rm -v "$(pwd):/mount:ro" \
+    ghcr.io/ktr0731/evans:latest \
+      --path ./proto/files \
+      --proto file-name.proto \
+      --host example.com \
+      --port 50051 \
+      repl
+```
+
+```
+evans -r repl
+```
+
+```
+evans --tls --host example.com --port -r repl
+```
