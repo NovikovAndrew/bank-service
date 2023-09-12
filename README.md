@@ -4,26 +4,34 @@
 
 for user migration make sure
 
+```
 $ brew install golang-migrate
+```
 
+add schema 
+
+```
 migrate create -ext sql -dir db/migration -seq init_schema
+```
 
 for migrate up use command
-migrate -path db/migration -database "postgresql://root:root@localhost:5432/bank?sslmode=disable" -verbose up
 
-sqlc instalation 
+````
+migrate -path db/migration -database "postgresql://root:root@localhost:5432/bank?sslmode=disable" -verbose up
+````
+
+### sqlc instalation 
 
 macOS
+````
 brew install sqlc
-
-Ubuntu
-sudo snap install sqlc
-
-Docker
-docker pull kjconroy/sqlc
+````
 
 for init yaml file user command 
+
+````
 sqlc init
+````
 
 ### Install mockgen
 
@@ -59,7 +67,7 @@ source ~/.zshrc
 mockgen -package mockdb -destination db/mock/store.go  bank-service/db/sqlc Store 
 ```
 
-### gPRC client for testing 
+### gPRC client for testing
 
 You can use evans for testing gRPC client
 
