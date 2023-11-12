@@ -119,3 +119,14 @@ docker container inspect bank-service-postgres
 docker run --network bank-network --name bank-service -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:root@bank-service-postgres/bank?sslmode=disable" bank:latest
 docker network inspect bank-network  
 ```
+
+```
+docker compose up
+chmod +x start.sh
+docker compose down
+```
+
+```
+ mv ~/Downloads/wait-for ./wait-for.sh
+ chmod +x wait-for.sh
+```
