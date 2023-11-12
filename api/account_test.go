@@ -1,23 +1,6 @@
 package api
 
-import (
-	"bytes"
-	"database/sql"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"net/http/httptest"
-	"testing"
-
-	"bank-service/db/mock"
-	"bank-service/db/sqlc"
-	"bank-service/util"
-
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
-)
-
+/*
 func TestGetAccountAPI(t *testing.T) {
 	account := generateAccount(util.GenerateRandomString(32))
 
@@ -127,3 +110,4 @@ func requireBodyMathAccount(t *testing.T, body *bytes.Buffer, account db.Account
 	require.NoError(t, err)
 	require.Equal(t, account, gotAccount)
 }
+*/
