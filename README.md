@@ -98,3 +98,24 @@ evans -r repl
 ```
 evans --tls --host example.com --port -r repl
 ```
+```
+docker build -t bank:latest .
+docker run --name bank -p 8080:8080 bank:latest
+docker run --name bank -p 8080:8080 -e GIN_MODE=release bank:latest
+```
+
+````
+docker container inspect
+docker container inspect bank-service-postgres
+docker run --name bank-service -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:root@172.17.0.2:5432/bank?sslmode=disable" bank:latest
+```
+
+```
+docker network ls
+docker network inspect bridge
+docker network create bank-network
+docker network connect bank-network bank-service-postgres
+docker container inspect bank-service-postgres
+docker run --network bank-network --name bank-service -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:root@bank-service-postgres/bank?sslmode=disable" bank:latest
+docker network inspect bank-network  
+```
